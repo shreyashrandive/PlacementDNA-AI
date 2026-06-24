@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 function Students() {
 
   const [students, setStudents] = useState([]);
+  const [editStudentId, setEditStudentId] = useState(null);
   const [formData, setFormData] = useState({
   name: "",
   email: "",
@@ -15,15 +16,17 @@ function Students() {
 const handleSaveStudent = async () => {
 
   const response = await fetch(
-    "http://127.0.0.1:8000/students",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(formData)
-    }
-  );
+  editStudentId
+    ? `http://127.0.0.1:8000/students/${editStudentId}`
+    : "http://127.0.0.1:8000/students",
+  {
+    method: editStudentId ? "PUT" : "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(formData)
+  }
+);
 
   const data = await response.json();
 
@@ -56,6 +59,22 @@ const handleDeleteStudent = async (id) => {
   window.location.reload();
 };
 
+const handleEditStudent = (student) => {
+
+  alert(student.name);
+
+  setEditStudentId(student.id);
+
+  setFormData({
+    name: student.name,
+    email: student.email,
+    placement_score: student.placement_score,
+    career_match: student.career_match,
+    skill_readiness: student.skill_readiness,
+    hiring_probability: student.hiring_probability
+  });
+
+};
 useEffect(() => {
 
     fetch("http://127.0.0.1:8000/students")
@@ -173,7 +192,7 @@ useEffect(() => {
     hover:bg-cyan-300
     "
   >
-    Save Student
+    {editStudentId ? "Update Student" : "Save Student"}
   </button>
 
 </div>
@@ -209,15 +228,23 @@ useEffect(() => {
                 <td className="p-4">{student.email}</td>
                 <td className="p-4">{student.placement_score}</td>
                 <td className="p-4">{student.hiring_probability}%</td>
-                <td className="p-4">
-  <button
-  onClick={() => handleDeleteStudent(student.id)}
-  className="bg-red-500 px-3 py-2 rounded-lg text-white hover:bg-red-600"
+<td className="p-4 flex gap-2">
+
+ <button
+  onClick={() => handleEditStudent(student)}
+  className="bg-yellow-500 px-3 py-2 rounded-lg text-black"
 >
-  Delete
+  Edit
 </button>
-</td>
-              </tr>
+
+  <button
+    onClick={() => handleDeleteStudent(student.id)}
+    className="bg-red-500 px-3 py-2 rounded-lg text-white hover:bg-red-600"
+  >
+    Delete
+  </button>
+
+</td>              </tr>
 
             ))}
 

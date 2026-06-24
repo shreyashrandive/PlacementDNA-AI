@@ -3,7 +3,8 @@ from crud import (
     get_student_data,
     create_student,
     get_all_students,
-    delete_student
+    delete_student,
+    update_student
 )
 from schemas import Student, StudentCreate
 
@@ -33,6 +34,10 @@ def fetch_students():
     def remove_student(student_id: int):
 
         return delete_student(student_id)
+    @router.put("/students/{student_id}")
+    def edit_student(student_id: int, student: StudentCreate):
+
+        return update_student(student_id, student)
 
     students = get_all_students()
 

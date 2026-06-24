@@ -125,4 +125,47 @@ def delete_student(student_id):
 
     return {
         "message": "Student Deleted Successfully"
+    }   
+
+def update_student(student_id, student):
+
+    conn = psycopg2.connect(
+        host="localhost",
+        database="placementdna",
+        user="postgres",
+        password="admin123"
+    )
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE students
+        SET
+            name=%s,
+            email=%s,
+            placement_score=%s,
+            career_match=%s,
+            skill_readiness=%s,
+            hiring_probability=%s
+        WHERE id=%s
+        """,
+        (
+            student.name,
+            student.email,
+            student.placement_score,
+            student.career_match,
+            student.skill_readiness,
+            student.hiring_probability,
+            student_id
+        )
+    )
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return {
+        "message": "Student Updated Successfully"
     }
