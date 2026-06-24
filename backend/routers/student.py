@@ -1,5 +1,10 @@
 from fastapi import APIRouter
-from crud import get_student_data, create_student, get_all_students
+from crud import (
+    get_student_data,
+    create_student,
+    get_all_students,
+    delete_student
+)
 from schemas import Student, StudentCreate
 
 router = APIRouter()
@@ -23,6 +28,11 @@ def add_student(student: StudentCreate):
     return create_student(student)
 @router.get("/students")
 def fetch_students():
+
+    @router.delete("/students/{student_id}")
+    def remove_student(student_id: int):
+
+        return delete_student(student_id)
 
     students = get_all_students()
 

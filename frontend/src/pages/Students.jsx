@@ -31,7 +31,32 @@ const handleSaveStudent = async () => {
 
   window.location.reload();
 };
-  useEffect(() => {
+
+const handleDeleteStudent = async (id) => {
+
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this student?"
+  );
+
+  if (!confirmDelete) {
+    return;
+  }
+
+  const response = await fetch(
+    `http://127.0.0.1:8000/students/${id}`,
+    {
+      method: "DELETE"
+    }
+  );
+
+  const data = await response.json();
+
+  alert(data.message);
+
+  window.location.reload();
+};
+
+useEffect(() => {
 
     fetch("http://127.0.0.1:8000/students")
       .then((response) => response.json())
@@ -136,7 +161,7 @@ const handleSaveStudent = async () => {
   </div>
 
   <button
-  onClick={handleSaveStudent}
+  onClick={handleSaveStudent}   
     className="
     mt-6
     bg-cyan-400
@@ -165,6 +190,7 @@ const handleSaveStudent = async () => {
               <th className="p-4 text-left">Email</th>
               <th className="p-4 text-left">Score</th>
               <th className="p-4 text-left">Hiring %</th>
+              <th className="p-4 text-left">Action</th>
 
             </tr>
 
@@ -183,6 +209,14 @@ const handleSaveStudent = async () => {
                 <td className="p-4">{student.email}</td>
                 <td className="p-4">{student.placement_score}</td>
                 <td className="p-4">{student.hiring_probability}%</td>
+                <td className="p-4">
+  <button
+  onClick={() => handleDeleteStudent(student.id)}
+  className="bg-red-500 px-3 py-2 rounded-lg text-white hover:bg-red-600"
+>
+  Delete
+</button>
+</td>
               </tr>
 
             ))}

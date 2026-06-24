@@ -101,3 +101,28 @@ def get_all_students():
     conn.close()
 
     return students
+
+def delete_student(student_id):
+
+    conn = psycopg2.connect(
+        host="localhost",
+        database="placementdna",
+        user="postgres",
+        password="admin123"
+    )
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "DELETE FROM students WHERE id = %s",
+        (student_id,)
+    )
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return {
+        "message": "Student Deleted Successfully"
+    }
