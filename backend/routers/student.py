@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from crud import get_student_data
-from schemas import Student
+from crud import get_student_data, create_student, get_all_students
+from schemas import Student, StudentCreate
 
 router = APIRouter()
 
@@ -17,3 +17,29 @@ def get_student():
         "skill_readiness": student[3],
         "hiring_probability": student[4]
     }
+@router.post("/students")
+def add_student(student: StudentCreate):
+
+    return create_student(student)
+@router.get("/students")
+def fetch_students():
+
+    students = get_all_students()
+
+    result = []
+
+    for student in students:
+
+        result.append(
+            {
+                "id": student[0],
+                "name": student[1],
+                "email": student[2],
+                "placement_score": student[3],
+                "career_match": student[4],
+                "skill_readiness": student[5],
+                "hiring_probability": student[6]
+            }
+        )
+
+    return result
