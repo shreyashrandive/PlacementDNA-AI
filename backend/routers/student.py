@@ -4,7 +4,8 @@ from crud import (
     create_student,
     get_all_students,
     delete_student,
-    update_student
+    update_student,
+    get_dashboard_stats
 )
 from schemas import Student, StudentCreate
 
@@ -23,21 +24,8 @@ def get_student():
         "skill_readiness": student[3],
         "hiring_probability": student[4]
     }
-@router.post("/students")
-def add_student(student: StudentCreate):
-
-    return create_student(student)
 @router.get("/students")
 def fetch_students():
-
-    @router.delete("/students/{student_id}")
-    def remove_student(student_id: int):
-
-        return delete_student(student_id)
-    @router.put("/students/{student_id}")
-    def edit_student(student_id: int, student: StudentCreate):
-
-        return update_student(student_id, student)
 
     students = get_all_students()
 
@@ -58,3 +46,21 @@ def fetch_students():
         )
 
     return result
+
+
+@router.delete("/students/{student_id}")
+def remove_student(student_id: int):
+
+    return delete_student(student_id)
+
+
+@router.put("/students/{student_id}")
+def edit_student(student_id: int, student: StudentCreate):
+
+    return update_student(student_id, student)
+
+
+@router.get("/dashboard/stats")
+def dashboard_stats():
+
+    return get_dashboard_stats()

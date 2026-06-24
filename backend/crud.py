@@ -169,3 +169,54 @@ def update_student(student_id, student):
     return {
         "message": "Student Updated Successfully"
     }
+
+def get_dashboard_stats():
+
+    conn = psycopg2.connect(
+        host="localhost",
+        database="placementdna",
+        user="postgres",
+        password="admin123"
+    )
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM students
+    """)
+
+    total_students = cursor.fetchone()[0]
+
+    cursor.execute("""
+        SELECT AVG(placement_score)
+        FROM students
+    """)
+
+    avg_score = cursor.fetchone()[0] or 0
+
+    cursor.execute("""
+        SELECT AVG(hiring_probability)
+        FROM students
+    """)
+
+    avg_hiring = cursor.fetchone()[0] or 0
+
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM students
+        WHERE placement_score >= 70
+    """)
+
+    placement_ready = cursor.fetchone()[0]
+
+    conn.close()
+
+    return {
+        "total_students": total_students,
+        "avg_score": round(avg_score, 2),
+        "avg_hiring": round(avg_hiring, 2),
+        "placement_ready": placement_ready
+    }
+
+

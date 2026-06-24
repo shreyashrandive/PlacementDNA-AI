@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
+import DashboardAnalytics from "../pages/DashboardAnalytics";
 import Students from "../pages/Students";
 
 function AppRoutes() {
@@ -17,6 +18,11 @@ function AppRoutes() {
         <Route
           path="/dashboard"
           element={<Dashboard />}
+        />
+
+        <Route
+           path="/analytics"
+           element={<DashboardAnalytics />}
         />
 
         <Route
