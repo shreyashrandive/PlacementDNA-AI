@@ -219,4 +219,99 @@ def get_dashboard_stats():
         "placement_ready": placement_ready
     }
 
+def get_chart_data():
+
+    conn = psycopg2.connect(
+        host="localhost",
+        database="placementdna",
+        user="postgres",
+        password="admin123"
+    )
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT
+            name,
+            placement_score
+        FROM students
+        ORDER BY placement_score DESC
+    """)
+
+    students = cursor.fetchall()
+
+    conn.close()
+
+    result = []
+
+    for student in students:
+        result.append(
+            {
+                "name": student[0],
+                "placement_score": student[1]
+            }
+        )
+
+    return result
+
+def get_director_insights():
+
+    conn = psycopg2.connect(
+        host="localhost",
+        database="placementdna",
+        user="postgres",
+        password="admin123"
+    )
+
+    cursor = conn.cursor()
+
+    # Total Students
+    cursor.execute("SELECT COUNT(*) FROM students")
+    total_students = cursor.fetchone()[0]
+
+    # Placement Ready Students
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM students
+        WHERE placement_score >= 70
+    """)
+    placement_ready = cursor.fetchone()[0]
+
+    # Students Needing Attention
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM students
+        WHERE placement_score < 70
+    """)
+    needs_attention = cursor.fetchone()[0]
+
+    # Average Placement Score
+    cursor.execute("""
+        SELECT AVG(placement_score)
+        FROM students
+    """)
+    avg_score = cursor.fetchone()[0] or 0
+
+    # Top Performer
+    cursor.execute("""
+        SELECT
+            name,
+            placement_score
+        FROM students
+        ORDER BY placement_score DESC
+        LIMIT 1
+    """)
+
+    top_student = cursor.fetchone()
+
+    conn.close()
+
+    return {
+        "total_students": total_students,
+        "placement_ready": placement_ready,
+        "needs_attention": needs_attention,
+        "avg_score": round(avg_score, 2),
+        "top_student": top_student[0] if top_student else "N/A",
+        "top_score": top_student[1] if top_student else 0
+    }
 

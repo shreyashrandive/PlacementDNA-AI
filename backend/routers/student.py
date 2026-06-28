@@ -5,7 +5,9 @@ from crud import (
     get_all_students,
     delete_student,
     update_student,
-    get_dashboard_stats
+    get_dashboard_stats,
+    get_chart_data,
+    get_director_insights
 )
 from schemas import Student, StudentCreate
 
@@ -64,3 +66,13 @@ def edit_student(student_id: int, student: StudentCreate):
 def dashboard_stats():
 
     return get_dashboard_stats()
+
+@router.get("/dashboard/chart")
+def dashboard_chart():
+
+    return get_chart_data()
+
+@router.get("/dashboard/director-insights")
+def director_insights():
+
+    return get_director_insights()
