@@ -315,3 +315,39 @@ def get_director_insights():
         "top_score": top_student[1] if top_student else 0
     }
 
+def get_ai_recommendations():
+
+    insights = get_director_insights()
+
+    if insights["avg_score"] >= 80:
+        readiness = "Excellent"
+    elif insights["avg_score"] >= 60:
+        readiness = "Good"
+    else:
+        readiness = "Needs Improvement"
+
+    return {
+        "overall_status": readiness,
+        "total_students": insights["total_students"],
+        "placement_ready": insights["placement_ready"],
+        "needs_attention": insights["needs_attention"],
+        "top_student": insights["top_student"],
+        "top_score": insights["top_score"],
+        "avg_score": insights["avg_score"]
+    }
+
+def get_hiring_pie_data():
+
+    insights = get_director_insights()
+
+    return [
+        {
+            "name": "Placement Ready",
+            "value": insights["placement_ready"]
+        },
+        {
+            "name": "Needs Attention",
+            "value": insights["needs_attention"]
+        }
+    ]
+

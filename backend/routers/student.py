@@ -7,7 +7,9 @@ from crud import (
     update_student,
     get_dashboard_stats,
     get_chart_data,
-    get_director_insights
+    get_director_insights,
+    get_ai_recommendations,
+    get_hiring_pie_data
 )
 from schemas import Student, StudentCreate
 
@@ -76,3 +78,13 @@ def dashboard_chart():
 def director_insights():
 
     return get_director_insights()
+
+@router.get("/dashboard/ai-recommendations")
+def ai_recommendations():
+
+    return get_ai_recommendations()
+
+@router.get("/dashboard/hiring-pie")
+def hiring_pie():
+
+    return get_hiring_pie_data()
