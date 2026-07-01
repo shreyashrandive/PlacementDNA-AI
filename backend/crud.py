@@ -336,6 +336,106 @@ def get_ai_recommendations():
         "avg_score": insights["avg_score"]
     }
 
+def get_placement_trend():
+
+    return [
+
+        {"month": "Jan", "score": 62},
+
+        {"month": "Feb", "score": 66},
+
+        {"month": "Mar", "score": 71},
+
+        {"month": "Apr", "score": 75},
+
+        {"month": "May", "score": 81},
+
+        {"month": "Jun", "score": 87}
+
+    ]
+
+def get_department_analytics():
+
+    return [
+
+        {
+            "department": "BCA",
+            "placement_rate": 92
+        },
+
+        {
+            "department": "BBA",
+            "placement_rate": 78
+        },
+
+        {
+            "department": "MCA",
+            "placement_rate": 96
+        },
+
+        {
+            "department": "MBA",
+            "placement_rate": 74
+        },
+
+        {
+            "department": "B.Tech",
+            "placement_rate": 88
+        }
+
+    ]
+
+def get_top_students():
+
+    return [
+
+        {
+            "rank": 1,
+            "name": "Shreyash",
+            "department": "BCA",
+            "placement_score": 95,
+            "hiring_probability": 98,
+            "status": "Ready"
+        },
+
+        {
+            "rank": 2,
+            "name": "Rahul",
+            "department": "MCA",
+            "placement_score": 93,
+            "hiring_probability": 96,
+            "status": "Ready"
+        },
+
+        {
+            "rank": 3,
+            "name": "Priya",
+            "department": "B.Tech",
+            "placement_score": 91,
+            "hiring_probability": 94,
+            "status": "Ready"
+        },
+
+        {
+            "rank": 4,
+            "name": "Amit",
+            "department": "MBA",
+            "placement_score": 88,
+            "hiring_probability": 90,
+            "status": "Improving"
+        },
+
+        {
+            "rank": 5,
+            "name": "Neha",
+            "department": "BBA",
+            "placement_score": 86,
+            "hiring_probability": 89,
+            "status": "Improving"
+        }
+
+    ]
+
 def get_hiring_pie_data():
 
     insights = get_director_insights()

@@ -9,7 +9,10 @@ from crud import (
     get_chart_data,
     get_director_insights,
     get_ai_recommendations,
-    get_hiring_pie_data
+    get_hiring_pie_data,
+    get_placement_trend,
+    get_department_analytics,
+    get_top_students
 )
 from schemas import Student, StudentCreate
 
@@ -88,3 +91,15 @@ def ai_recommendations():
 def hiring_pie():
 
     return get_hiring_pie_data()
+
+@router.get("/dashboard/placement-trend")
+def placement_trend():
+    return get_placement_trend()
+
+@router.get("/dashboard/department-analytics")
+def department_analytics():
+    return get_department_analytics()
+
+@router.get("/dashboard/top-students")
+def top_students():
+    return get_top_students()
