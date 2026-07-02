@@ -8,6 +8,9 @@ import TopStudentsLeaderboard from "../components/TopStudentsLeaderboard";
 import HiringPieChart from "../components/HiringPieChart";
 import DirectorInsights from "../components/DirectorInsights";
 import AIAssistant from "../components/AIAssistant";
+import ExportPDFButton from "../components/ExportPDFButton";
+import ExportExcelButton from "../components/ExportExcelButton";  
+import FilterBar from "../components/FilterBar";
 
 function DashboardAnalytics() {
 
@@ -25,6 +28,32 @@ function DashboardAnalytics() {
   const [departmentData, setDepartmentData] = useState([]);
 
   const [topStudents, setTopStudents] = useState([]);
+
+  const [search, setSearch] = useState("");
+  const [department, setDepartment] = useState("All Departments");
+
+  const [status, setStatus] = useState("All Status");
+
+  const filteredStudents = topStudents.filter((student) => {
+
+  const matchesSearch =
+    student.name.toLowerCase().includes(search.toLowerCase());
+
+  const matchesDepartment =
+    department === "All Departments" ||
+    student.department === department;
+
+  const matchesStatus =
+    status === "All Status" ||
+    student.status === status;
+
+  return (
+    matchesSearch &&
+    matchesDepartment &&
+    matchesStatus
+  );
+
+});
 
   const [pieData, setPieData] = useState([]);
 
@@ -88,9 +117,36 @@ function DashboardAnalytics() {
 
     <div className="min-h-screen bg-slate-950 p-8">
 
-      <h1 className="text-4xl font-bold text-cyan-400 mb-8">
-        PlacementDNA Analytics Dashboard
-      </h1>
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+
+  <h1 className="text-4xl font-bold text-cyan-400">
+    PlacementDNA Analytics Dashboard
+  </h1>
+
+ <div className="mt-4 md:mt-0 flex gap-3">
+
+  <ExportPDFButton
+    stats={stats}
+    topStudents={topStudents}
+  />
+
+  <ExportExcelButton
+    stats={stats}
+    topStudents={topStudents}
+  />
+
+</div>
+
+</div>
+
+<FilterBar
+  search={search}
+  setSearch={setSearch}
+  department={department}
+  setDepartment={setDepartment}
+  status={status}
+  setStatus={setStatus}
+/>
 
       <KPICards stats={stats} />
 
@@ -106,7 +162,9 @@ function DashboardAnalytics() {
 
       <AIAssistant aiRecommendation={aiRecommendation} />
 
-      <TopStudentsLeaderboard topStudents={topStudents} />
+     <TopStudentsLeaderboard
+        topStudents={filteredStudents}
+     />
 
     </div>
 
