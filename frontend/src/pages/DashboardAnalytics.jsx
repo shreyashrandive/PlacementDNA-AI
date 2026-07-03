@@ -11,6 +11,8 @@ import AIAssistant from "../components/AIAssistant";
 import ExportPDFButton from "../components/ExportPDFButton";
 import ExportExcelButton from "../components/ExportExcelButton";  
 import FilterBar from "../components/FilterBar";
+import LoadingSkeleton from "../components/LoadingSkeleton";
+import { toast } from "react-toastify"; 
 
 function DashboardAnalytics() {
 
@@ -34,7 +36,11 @@ function DashboardAnalytics() {
 
   const [status, setStatus] = useState("All Status");
 
+  const [loading, setLoading] = useState(true);
+
   const filteredStudents = topStudents.filter((student) => {
+
+  
 
   const matchesSearch =
     student.name.toLowerCase().includes(search.toLowerCase());
@@ -54,6 +60,130 @@ function DashboardAnalytics() {
   );
 
 });
+
+const filteredChartData = filteredStudents.map((student) => ({
+
+  name: student.name,
+
+  score: student.placement_score
+
+}));
+
+const filteredDepartmentData =
+  department === "All Departments"
+    ? departmentData
+    : departmentData.filter(
+        (item) => item.department === department
+      );
+
+      const readyStudents = filteredStudents.filter(
+  (student) => student.status === "Ready"
+).length;
+
+const improvingStudents = filteredStudents.filter(
+  (student) => student.status === "Improving"
+).length;
+
+const filteredPieData = [
+  {
+    name: "Ready",
+    value: readyStudents,
+  },
+  {
+    name: "Improving",
+    value: improvingStudents,
+  },
+];
+
+const filteredStats = {
+
+  total_students: filteredStudents.length,
+
+  avg_score:
+    filteredStudents.length > 0
+      ? (
+          filteredStudents.reduce(
+            (sum, student) =>
+              sum + student.placement_score,
+            0
+          ) / filteredStudents.length
+        ).toFixed(1)
+      : 0,
+
+  avg_hiring:
+    filteredStudents.length > 0
+      ? (
+          filteredStudents.reduce(
+            (sum, student) =>
+              sum + student.hiring_probability,
+            0
+          ) / filteredStudents.length
+        ).toFixed(1)
+      : 0,
+
+  placement_ready:
+    filteredStudents.filter(
+      (student) => student.status === "Ready"
+    ).length
+
+};
+
+const filteredInsights = {
+
+  total_students: filteredStudents.length,
+
+  placement_ready: filteredStudents.filter(
+    (student) => student.status === "Ready"
+  ).length,
+
+  needs_attention: filteredStudents.filter(
+    (student) => student.status !== "Ready"
+  ).length,
+
+  avg_score: filteredStats.avg_score,
+
+  top_student:
+    filteredStudents.length > 0
+      ? filteredStudents.reduce((best, current) =>
+          current.placement_score > best.placement_score
+            ? current
+            : best
+        ).name
+      : "-",
+
+  top_score:
+    filteredStudents.length > 0
+      ? filteredStudents.reduce((best, current) =>
+          current.placement_score > best.placement_score
+            ? current
+            : best
+        ).placement_score
+      : 0
+
+};
+
+const filteredAIRecommendation = {
+
+  overall_status:
+    filteredStats.avg_score >= 80
+      ? "Excellent"
+      : filteredStats.avg_score >= 60
+      ? "Good"
+      : "Needs Improvement",
+
+  total_students: filteredInsights.total_students,
+
+  placement_ready: filteredInsights.placement_ready,
+
+  needs_attention: filteredInsights.needs_attention,
+
+  avg_score: filteredInsights.avg_score,
+
+  top_student: filteredInsights.top_student,
+
+  top_score: filteredInsights.top_score
+
+};
 
   const [pieData, setPieData] = useState([]);
 
@@ -111,11 +241,27 @@ function DashboardAnalytics() {
       .then((res) => res.json())
       .then((data) => setAiRecommendation(data));
 
+       setTimeout(() => {
+  setLoading(false);
+}, 1000);
+
+setTimeout(() => {
+  toast.success("🎉 Welcome to PlacementDNA Analytics Dashboard!");
+}, 1200);
+
   }, []);
 
+  if (loading) {
   return (
-
     <div className="min-h-screen bg-slate-950 p-8">
+      <LoadingSkeleton />
+    </div>
+  );
+}
+
+return (
+
+  <div className="min-h-screen bg-slate-950 p-8">
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-8">
 
@@ -126,14 +272,14 @@ function DashboardAnalytics() {
  <div className="mt-4 md:mt-0 flex gap-3">
 
   <ExportPDFButton
-    stats={stats}
-    topStudents={topStudents}
-  />
+  stats={filteredStats}
+  topStudents={filteredStudents}
+/>
 
   <ExportExcelButton
-    stats={stats}
-    topStudents={topStudents}
-  />
+  stats={filteredStats}
+  topStudents={filteredStudents}
+/>
 
 </div>
 
@@ -148,19 +294,17 @@ function DashboardAnalytics() {
   setStatus={setStatus}
 />
 
-      <KPICards stats={stats} />
+      <KPICards stats={filteredStats} />
 
-      <PlacementChart chartData={chartData} />
+      <PlacementChart chartData={filteredChartData} />
 
-      <PlacementTrendChart trendData={trendData} />
+      <DepartmentAnalyticsChart departmentData={filteredDepartmentData} />
 
-      <DepartmentAnalyticsChart departmentData={departmentData} />
+      <HiringPieChart pieData={filteredPieData} />
 
-      <HiringPieChart pieData={pieData} />
+      <DirectorInsights insights={filteredInsights} />
 
-      <DirectorInsights insights={insights} />
-
-      <AIAssistant aiRecommendation={aiRecommendation} />
+      <AIAssistant aiRecommendation={filteredAIRecommendation} />
 
      <TopStudentsLeaderboard
         topStudents={filteredStudents}
