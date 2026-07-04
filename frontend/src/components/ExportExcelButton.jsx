@@ -1,4 +1,6 @@
 import * as XLSX from "xlsx";
+import { toast } from "react-toastify";
+
 function ExportExcelButton({ stats, topStudents }) {
 
   const exportExcel = () => {
@@ -66,6 +68,8 @@ XLSX.writeFile(
   workbook,
   "PlacementDNA_Report.xlsx"
 );
+
+toast.success("📊 Excel exported successfully!");
 
   };
 

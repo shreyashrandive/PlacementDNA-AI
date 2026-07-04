@@ -5,89 +5,48 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip
+  Tooltip,
 } from "recharts";
 
 function PlacementChart({ chartData }) {
   return (
+    <div className="bg-slate-900 rounded-3xl shadow-xl p-5 sm:p-6 mt-8">
 
-    <div
-      className="
-        mt-10
-        bg-gradient-to-br
-        from-slate-900
-        to-slate-800
-        rounded-3xl
-        shadow-2xl
-        p-8
-        border
-        border-slate-700
-      "
-    >
+      <h2 className="text-xl sm:text-2xl font-bold text-cyan-400 mb-6">
+        Placement Performance Analytics
+      </h2>
 
-      <div className="mb-8">
+      <div className="w-full h-[320px] sm:h-[420px]">
 
-        <h2 className="text-3xl font-bold text-white">
-          📈 Placement Performance Analytics
-        </h2>
+        <ResponsiveContainer width="100%" height="100%">
 
-        <p className="text-slate-400 mt-2">
-          Real-time student placement score analysis powered by PlacementDNA AI
-        </p>
+          <BarChart data={chartData}>
+
+            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+
+            <XAxis
+              dataKey="name"
+              tick={{ fill: "#CBD5E1", fontSize: 12 }}
+            />
+
+            <YAxis
+              tick={{ fill: "#CBD5E1", fontSize: 12 }}
+            />
+
+            <Tooltip />
+
+            <Bar
+              dataKey="score"
+              radius={[8, 8, 0, 0]}
+            />
+
+          </BarChart>
+
+        </ResponsiveContainer>
 
       </div>
 
-      <ResponsiveContainer width="100%" height={350}>
-
-        <BarChart
-          data={chartData}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 10,
-            bottom: 5
-          }}
-        >
-
-          <CartesianGrid
-            strokeDasharray="4 4"
-            stroke="#334155"
-          />
-
-          <XAxis
-            dataKey="name"
-            tick={{ fill: "#CBD5E1", fontSize: 12 }}
-            axisLine={false}
-            tickLine={false}
-          />
-
-          <YAxis
-            tick={{ fill: "#CBD5E1", fontSize: 12 }}
-            axisLine={false}
-            tickLine={false}
-          />
-
-          <Tooltip
-            contentStyle={{
-              backgroundColor: "#0F172A",
-              border: "1px solid #334155",
-              borderRadius: "12px",
-              color: "#FFFFFF"
-            }}
-          />
-
-          <Bar
-            dataKey="placement_score"
-            fill="#22D3EE"
-            radius={[12, 12, 0, 0]}
-          />
-
-        </BarChart>
-
-      </ResponsiveContainer>
-
     </div>
-
   );
 }
 

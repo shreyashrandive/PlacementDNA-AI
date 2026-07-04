@@ -208,38 +208,69 @@ const filteredAIRecommendation = {
 
   useEffect(() => {
 
-    fetch("http://127.0.0.1:8000/dashboard/stats")
-      .then((res) => res.json())
-      .then((data) => setStats(data));
+   fetch("http://127.0.0.1:8000/dashboard/stats")
+  .then((res) => res.json())
+  .then((data) => setStats(data))
+  .catch(() => {
+    toast.error("❌ Unable to load Dashboard Statistics");
+  });
 
-    fetch("http://127.0.0.1:8000/dashboard/chart")
-      .then((res) => res.json())
-      .then((data) => setChartData(data));
+   fetch("http://127.0.0.1:8000/dashboard/chart")
+  .then((res) => res.json())
+  .then((data) => setChartData(data))
+  .catch(() => {
+    toast.error("❌ Failed to load Placement Chart");
+  });
 
-    fetch("http://127.0.0.1:8000/dashboard/placement-trend")
-      .then((res) => res.json())
-      .then((data) => setTrendData(data));  
+
+  fetch("http://127.0.0.1:8000/dashboard/placement-trend")
+  .then((res) => res.json())
+  .then((data) => setTrendData(data))
+  .catch(() => {
+    toast.error("❌ Failed to load Placement Trend");
+  });
+
 
     fetch("http://127.0.0.1:8000/dashboard/department-analytics")
-      .then((res) => res.json())
-      .then((data) => setDepartmentData(data));
+  .then((res) => res.json())
+  .then((data) => setDepartmentData(data))
+  .catch(() => {
+    toast.error("❌ Failed to load Department Analytics");
+  });
 
-    fetch("http://127.0.0.1:8000/dashboard/top-students")
-      .then((res) => res.json())
-      .then((data) => setTopStudents(data));
+
+
+   fetch("http://127.0.0.1:8000/dashboard/top-students")
+  .then((res) => res.json())
+  .then((data) => setTopStudents(data))
+  .catch(() => {
+    toast.error("❌ Failed to load Top Students");
+  });
+
       
 
-    fetch("http://127.0.0.1:8000/dashboard/hiring-pie")
-      .then((res) => res.json())
-      .then((data) => setPieData(data));
+  fetch("http://127.0.0.1:8000/dashboard/hiring-pie")
+  .then((res) => res.json())
+  .then((data) => setPieData(data))
+  .catch(() => {
+    toast.error("❌ Failed to load Hiring Probability");
+  });
 
-    fetch("http://127.0.0.1:8000/dashboard/director-insights")
-      .then((res) => res.json())
-      .then((data) => setInsights(data));
+
+   fetch("http://127.0.0.1:8000/dashboard/director-insights")
+  .then((res) => res.json())
+  .then((data) => setInsights(data))
+  .catch(() => {
+    toast.error("❌ Failed to load Director Insights");
+  });
+
 
     fetch("http://127.0.0.1:8000/dashboard/ai-recommendations")
-      .then((res) => res.json())
-      .then((data) => setAiRecommendation(data));
+  .then((res) => res.json())
+  .then((data) => setAiRecommendation(data))
+  .catch(() => {
+    toast.error("❌ Failed to load AI Recommendations");
+  });
 
        setTimeout(() => {
   setLoading(false);
@@ -253,7 +284,7 @@ setTimeout(() => {
 
   if (loading) {
   return (
-    <div className="min-h-screen bg-slate-950 p-8">
+    <div className="min-h-screen bg-slate-950 px-4 py-6 sm:px-6 lg:px-8">
       <LoadingSkeleton />
     </div>
   );
@@ -263,25 +294,33 @@ return (
 
   <div className="min-h-screen bg-slate-950 p-8">
 
-      <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
 
-  <h1 className="text-4xl font-bold text-cyan-400">
-    PlacementDNA Analytics Dashboard
-  </h1>
+  <div>
 
- <div className="mt-4 md:mt-0 flex gap-3">
+    <h1 className="text-3xl sm:text-4xl font-bold text-cyan-400">
+      PlacementDNA Analytics Dashboard
+    </h1>
 
-  <ExportPDFButton
-  stats={filteredStats}
-  topStudents={filteredStudents}
-/>
+    <p className="text-slate-400 mt-2">
+      AI Powered Placement Analytics & Decision Dashboard
+    </p>
 
-  <ExportExcelButton
-  stats={filteredStats}
-  topStudents={filteredStudents}
-/>
+  </div>
 
-</div>
+  <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+
+    <ExportPDFButton
+      stats={filteredStats}
+      topStudents={filteredStudents}
+    />
+
+    <ExportExcelButton
+      stats={filteredStats}
+      topStudents={filteredStudents}
+    />
+
+  </div>
 
 </div>
 
@@ -296,19 +335,23 @@ return (
 
       <KPICards stats={filteredStats} />
 
-      <PlacementChart chartData={filteredChartData} />
+      <div className="space-y-8">
 
-      <DepartmentAnalyticsChart departmentData={filteredDepartmentData} />
+  <PlacementChart chartData={filteredChartData} />
 
-      <HiringPieChart pieData={filteredPieData} />
+  <DepartmentAnalyticsChart departmentData={filteredDepartmentData} />
 
-      <DirectorInsights insights={filteredInsights} />
+  <HiringPieChart pieData={filteredPieData} />
 
-      <AIAssistant aiRecommendation={filteredAIRecommendation} />
+  <DirectorInsights insights={filteredInsights} />
 
-     <TopStudentsLeaderboard
-        topStudents={filteredStudents}
-     />
+  <AIAssistant aiRecommendation={filteredAIRecommendation} />
+
+  <TopStudentsLeaderboard
+    topStudents={filteredStudents}
+  />
+
+</div>
 
     </div>
 

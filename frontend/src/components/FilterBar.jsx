@@ -4,118 +4,51 @@ function FilterBar({
   department,
   setDepartment,
   status,
-  setStatus
+  setStatus,
 }) {
-
   return (
+    <div className="bg-slate-900 rounded-3xl shadow-xl p-5 sm:p-6 mt-8 mb-8">
 
-    <div className="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl p-6 mb-8">
+      <h2 className="text-xl font-bold text-cyan-400 mb-5">
+        Dashboard Filters
+      </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-
-        {/* Search */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
         <input
           type="text"
           placeholder="🔍 Search Student..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="
-            bg-slate-800
-            border
-            border-slate-700
-            rounded-xl
-            px-4
-            py-3
-            text-white
-            focus:outline-none
-            focus:ring-2
-            focus:ring-cyan-500
-          "
+          className="bg-slate-800 text-white rounded-xl px-4 py-3 outline-none border border-slate-700 focus:border-cyan-400 transition"
         />
 
-        {/* Department */}
-
         <select
-  value={department}
-  onChange={(e) => setDepartment(e.target.value)}
-  className="
-    bg-slate-800
-    border
-    border-slate-700
-    rounded-xl
-    px-4
-    py-3
-    text-white
-    focus:outline-none
-    focus:ring-2
-    focus:ring-cyan-500
-  "
->
-
-          <option>All Departments</option>
-
-          <option>BCA</option>
-
-          <option>BBA</option>
-
-          <option>MCA</option>
-
-          <option>MBA</option>
-
-          <option>B.Tech</option>
-
-        </select>
-
-        {/* Status */}
-
-        <select
-  value={status}
-  onChange={(e) => setStatus(e.target.value)}
-  className="
-    bg-slate-800
-    border
-    border-slate-700
-    rounded-xl
-    px-4
-    py-3
-    text-white
-    focus:outline-none
-    focus:ring-2
-    focus:ring-cyan-500
-  "
->
-
-          <option>All Status</option>
-
-          <option>Ready</option>
-
-          <option>Improving</option>
-
-        </select>
-
-        {/* Reset */}
-
-        <button
-          className="
-            bg-cyan-600
-            hover:bg-cyan-700
-            rounded-xl
-            text-white
-            font-semibold
-            transition-all
-            duration-300
-          "
+          value={department}
+          onChange={(e) => setDepartment(e.target.value)}
+          className="bg-slate-800 text-white rounded-xl px-4 py-3 outline-none border border-slate-700 focus:border-cyan-400 transition"
         >
-          🔄 Reset Filters
-        </button>
+          <option>All Departments</option>
+          <option>BCA</option>
+          <option>BBA</option>
+          <option>B.Tech</option>
+          <option>MBA</option>
+        </select>
+
+        <select
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          className="bg-slate-800 text-white rounded-xl px-4 py-3 outline-none border border-slate-700 focus:border-cyan-400 transition"
+        >
+          <option>All Status</option>
+          <option>Ready</option>
+          <option>Improving</option>
+        </select>
 
       </div>
 
     </div>
-
   );
-
 }
 
 export default FilterBar;

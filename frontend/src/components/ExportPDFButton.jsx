@@ -1,4 +1,5 @@
 import jsPDF from "jspdf";
+import { toast } from "react-toastify";
 
 function ExportPDFButton({ stats, topStudents }) {
 
@@ -70,6 +71,7 @@ topStudents.forEach((student) => {
 });
 
 doc.save("PlacementDNA_Report.pdf");
+toast.success("📄 PDF exported successfully!");
 
   };
 
