@@ -1,42 +1,34 @@
-function TopStudentsLeaderboard({ topStudents }) {
+import { motion } from "framer-motion";
 
-  const getMedal = (rank) => {
-    if (rank === 1) return "🥇";
-    if (rank === 2) return "🥈";
-    if (rank === 3) return "🥉";
-    return rank;
-  };
+function TopStudentsLeaderboard({ topStudents }) {
 
   return (
 
-    <div className="mt-10 bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl shadow-2xl p-8 border border-slate-700">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      viewport={{ once: true }}
+      className="bg-slate-900 rounded-3xl shadow-2xl p-6 mt-8"
+    >
 
-      <div className="mb-8">
-
-        <h2 className="text-3xl font-bold text-white">
-          🏆 Top Students Leaderboard
-        </h2>
-
-        <p className="text-slate-400 mt-2">
-          Highest performing students based on placement analytics
-        </p>
-
-      </div>
+      <h2 className="text-2xl font-bold text-cyan-400 mb-6">
+        🏆 Top Students Leaderboard
+      </h2>
 
       <div className="overflow-x-auto">
 
-        <table className="w-full text-left">
+        <table className="w-full">
 
           <thead>
 
             <tr className="border-b border-slate-700">
 
-              <th className="py-4 text-cyan-400">Rank</th>
-              <th className="py-4 text-cyan-400">Student</th>
-              <th className="py-4 text-cyan-400">Department</th>
-              <th className="py-4 text-cyan-400">Score</th>
-              <th className="py-4 text-cyan-400">Hiring %</th>
-              <th className="py-4 text-cyan-400">Status</th>
+              <th className="text-left py-4 text-slate-300">Rank</th>
+              <th className="text-left py-4 text-slate-300">Student</th>
+              <th className="text-left py-4 text-slate-300">Department</th>
+              <th className="text-left py-4 text-slate-300">Score</th>
+              <th className="text-left py-4 text-slate-300">Hiring %</th>
 
             </tr>
 
@@ -44,50 +36,96 @@ function TopStudentsLeaderboard({ topStudents }) {
 
           <tbody>
 
-            {topStudents.map((student) => (
+            {topStudents.length === 0 ? (
 
-              <tr
-                key={student.rank}
-                className="border-b border-slate-800 hover:bg-slate-800 transition-colors"
-              >
+              <tr>
 
-                <td className="py-4 text-2xl">
-                  {getMedal(student.rank)}
-                </td>
+               <td
+  colSpan="5"
+  className="py-16 text-center"
+>
 
-                <td className="py-4 text-white font-semibold">
-                  {student.name}
-                </td>
+  <div className="flex flex-col items-center">
 
-                <td className="py-4 text-slate-300">
-                  {student.department}
-                </td>
+    <div className="text-6xl mb-4">
+      🔍
+    </div>
 
-                <td className="py-4 text-cyan-400 font-bold">
-                  {student.placement_score}
-                </td>
+    <h3 className="text-2xl font-bold text-white">
+      No Students Found
+    </h3>
 
-                <td className="py-4 text-green-400 font-bold">
-                  {student.hiring_probability}%
-                </td>
+    <p className="text-slate-400 mt-2">
+      Try changing the search, department, or status filters.
+    </p>
 
-                <td className="py-4">
+  </div>
 
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                      student.status === "Ready"
-                        ? "bg-green-600 text-white"
-                        : "bg-yellow-500 text-black"
-                    }`}
-                  >
-                    {student.status}
-                  </span>
-
-                </td>
-
+</td>
               </tr>
 
-            ))}
+            ) : (
+
+              topStudents.map((student, index) => (
+
+                <tr
+                  key={student.id}
+                  className="border-b border-slate-800 hover:bg-slate-800 transition"
+                >
+
+                  <td className="py-5">
+
+                    {index === 0
+                      ? "🥇"
+                      : index === 1
+                      ? "🥈"
+                      : index === 2
+                      ? "🥉"
+                      : `#${index + 1}`}
+
+                  </td>
+
+                  <td>
+
+                    <div>
+
+                      <p className="font-semibold text-white">
+                        {student.name}
+                      </p>
+
+                      <p className="text-sm text-slate-400">
+                        {student.status}
+                      </p>
+
+                    </div>
+
+                  </td>
+
+                  <td className="text-slate-300">
+                    {student.department}
+                  </td>
+
+                  <td>
+
+                    <span className="bg-cyan-600 px-3 py-1 rounded-full text-sm font-semibold">
+                      {student.placement_score}
+                    </span>
+
+                  </td>
+
+                  <td>
+
+                    <span className="bg-green-600 px-3 py-1 rounded-full text-sm font-semibold">
+                      {student.hiring_probability}%
+                    </span>
+
+                  </td>
+
+                </tr>
+
+              ))
+
+            )}
 
           </tbody>
 
@@ -95,7 +133,7 @@ function TopStudentsLeaderboard({ topStudents }) {
 
       </div>
 
-    </div>
+    </motion.div>
 
   );
 

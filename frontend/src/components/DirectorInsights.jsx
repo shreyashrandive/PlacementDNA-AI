@@ -1,81 +1,83 @@
+import { motion } from "framer-motion";
+
 function DirectorInsights({ insights }) {
-
   return (
-
-    <div className="mt-10 bg-slate-900 rounded-3xl shadow-2xl p-8 border border-slate-700">
-
-      <h2 className="text-3xl font-bold text-cyan-400 mb-8">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      viewport={{ once: true }}
+      className="bg-slate-900 rounded-3xl shadow-2xl p-6 mt-8"
+    >
+      <h2 className="text-2xl font-bold text-cyan-400 mb-6">
         🎯 Director Insights
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 
-        {/* Placement Ready */}
+        <div className="bg-slate-800 rounded-2xl p-5">
+          <p className="text-slate-400 text-sm">
+            Total Students
+          </p>
 
-        <div className="bg-green-900 rounded-2xl p-6">
-
-          <h3 className="text-lg font-semibold text-green-300">
-            ✅ Placement Ready
+          <h3 className="text-4xl font-bold text-white mt-2">
+            {insights.total_students}
           </h3>
+        </div>
 
-          <p className="text-4xl font-bold text-white mt-4">
+        <div className="bg-slate-800 rounded-2xl p-5">
+          <p className="text-slate-400 text-sm">
+            Placement Ready
+          </p>
+
+          <h3 className="text-4xl font-bold text-green-400 mt-2">
             {insights.placement_ready}
-          </p>
-
+          </h3>
         </div>
 
-        {/* Students Needing Attention */}
+        <div className="bg-slate-800 rounded-2xl p-5">
+          <p className="text-slate-400 text-sm">
+            Needs Attention
+          </p>
 
-        <div className="bg-red-900 rounded-2xl p-6">
-
-          <h3 className="text-lg font-semibold text-red-300">
-            ⚠ Students Needing Attention
-          </h3>
-
-          <p className="text-4xl font-bold text-white mt-4">
+          <h3 className="text-4xl font-bold text-red-400 mt-2">
             {insights.needs_attention}
-          </p>
-
+          </h3>
         </div>
 
-        {/* Average Placement Score */}
+        <div className="bg-slate-800 rounded-2xl p-5">
+          <p className="text-slate-400 text-sm">
+            Average Score
+          </p>
 
-        <div className="bg-cyan-900 rounded-2xl p-6">
-
-          <h3 className="text-lg font-semibold text-cyan-300">
-            📊 Average Placement Score
-          </h3>
-
-          <p className="text-4xl font-bold text-white mt-4">
+          <h3 className="text-4xl font-bold text-cyan-300 mt-2">
             {insights.avg_score}%
-          </p>
-
+          </h3>
         </div>
 
-        {/* Top Performer */}
+        <div className="bg-slate-800 rounded-2xl p-5">
+          <p className="text-slate-400 text-sm">
+            Top Performer
+          </p>
 
-        <div className="bg-yellow-900 rounded-2xl p-6">
-
-          <h3 className="text-lg font-semibold text-yellow-300">
-            🏆 Top Performer
+          <h3 className="text-2xl font-bold text-yellow-400 mt-2">
+            🏆 {insights.top_student}
           </h3>
+        </div>
 
-          <p className="text-2xl font-bold text-white mt-4">
-            {insights.top_student}
+        <div className="bg-slate-800 rounded-2xl p-5">
+          <p className="text-slate-400 text-sm">
+            Highest Score
           </p>
 
-          <p className="text-yellow-300 mt-2 text-lg">
-            Score: {insights.top_score}%
-          </p>
-
+          <h3 className="text-4xl font-bold text-purple-400 mt-2">
+            {insights.top_score}%
+          </h3>
         </div>
 
       </div>
-
-    </div>
-
+    </motion.div>
   );
-
 }
 
 export default DirectorInsights;

@@ -1,17 +1,34 @@
-import psycopg2
+from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-try:
-    conn = psycopg2.connect(
-        host="localhost",
-        database="placementdna",
-        user="postgres",
-        password="admin123"
-    )
 
-    print("Database Connected Successfully!")
+DATABASE_URL = "postgresql://postgres:admin123@localhost/placementdna"
 
-    conn.close()
 
-except Exception as e:
-    print("Connection Error:")
-    print(e)
+engine = create_engine(
+    DATABASE_URL
+)
+
+
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
+
+
+Base = declarative_base()
+
+
+def get_db():
+
+    db = SessionLocal()
+
+    try:
+
+        yield db
+
+    finally:
+
+        db.close()
