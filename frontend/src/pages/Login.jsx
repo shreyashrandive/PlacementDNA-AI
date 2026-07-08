@@ -1,12 +1,54 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import {
+  login,
+  saveToken,
+  saveUser,
+} from "../api/authService";
 
 function Login() {
 
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  const handleLogin = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [role, setRole] = useState("Student");
+    const [loading, setLoading] = useState(false);
+
+    const handleLogin = async () => {
+
+  if (!email || !password) {
+    toast.error("Please enter email and password");
+    return;
+  }
+
+  try {
+
+    setLoading(true);
+
+    const data = await login(email, password);
+
+    saveToken(data.access_token);
+
+    saveUser(data.user);
+
+    toast.success(`Welcome ${data.user.username}!`);
+
     navigate("/dashboard");
-  };
+
+  } catch (error) {
+
+    toast.error(error.message);
+
+  } finally {
+
+    setLoading(false);
+
+  }
+
+};
 
   return (
     <div className="relative min-h-screen bg-slate-950 flex overflow-hidden">
@@ -127,23 +169,25 @@ animate-pulse
               Email
             </label>
 
-            <input
-              type="email"
-              placeholder="Enter email"
-              className="
-w-full
-p-3
-rounded-xl
-bg-slate-800/80
-text-white
-border
-border-slate-700
-focus:border-cyan-400
-focus:outline-none
-transition-all
-duration-300
-"
-            />
+                          <input
+                type="email"
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="
+              w-full
+              p-3
+              rounded-xl
+              bg-slate-800/80
+              text-white
+              border
+              border-slate-700
+              focus:border-cyan-400
+              focus:outline-none
+              transition-all
+              duration-300
+              "
+              />
           </div>
 
           <div className="mb-4">
@@ -154,19 +198,22 @@ duration-300
             <input
               type="password"
               placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="
-w-full
-p-3
-rounded-xl
-bg-slate-800/80
-text-white
-border
-border-slate-700
-focus:border-cyan-400
-focus:outline-none
-transition-all
-duration-300
-"            />
+            w-full
+            p-3
+            rounded-xl
+            bg-slate-800/80
+            text-white
+            border
+            border-slate-700
+            focus:border-cyan-400
+            focus:outline-none
+            transition-all
+            duration-300
+            "
+            />
           </div>
 
                     <div className="flex items-center justify-between mb-6">
@@ -195,24 +242,46 @@ duration-300
             </label>
 
             <select
-              className="
-              w-full
-              p-3
-              rounded-xl
-              bg-slate-800/80
-              text-white
-              border
-              border-slate-700
-              focus:border-cyan-400
-              focus:outline-none
-              transition-all
-              duration-300
-              "
-            >
-              <option>Student</option>
-              <option>Placement Officer</option>
-              <option>Admin</option>
-            </select>
+  value={role}
+  onChange={(e) => setRole(e.target.value)}
+  className="
+  w-full
+  p-3
+  rounded-xl
+  bg-slate-800/80
+  text-white
+  border
+  border-slate-700
+  focus:border-cyan-400
+  focus:outline-none
+  transition-all
+  duration-300
+  "
+>
+  <option>Student</option>
+  <option>Placement Officer</option>
+  <option>Admin</option>
+</select><select
+  value={role}
+  onChange={(e) => setRole(e.target.value)}
+  className="
+  w-full
+  p-3
+  rounded-xl
+  bg-slate-800/80
+  text-white
+  border
+  border-slate-700
+  focus:border-cyan-400
+  focus:outline-none
+  transition-all
+  duration-300
+  "
+>
+  <option>Student</option>
+  <option>Placement Officer</option>
+  <option>Admin</option>
+</select>
           </div>
 
           <button
