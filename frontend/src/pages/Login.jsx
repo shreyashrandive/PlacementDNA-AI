@@ -261,31 +261,12 @@ animate-pulse
   <option>Student</option>
   <option>Placement Officer</option>
   <option>Admin</option>
-</select><select
-  value={role}
-  onChange={(e) => setRole(e.target.value)}
-  className="
-  w-full
-  p-3
-  rounded-xl
-  bg-slate-800/80
-  text-white
-  border
-  border-slate-700
-  focus:border-cyan-400
-  focus:outline-none
-  transition-all
-  duration-300
-  "
->
-  <option>Student</option>
-  <option>Placement Officer</option>
-  <option>Admin</option>
 </select>
           </div>
 
           <button
   onClick={handleLogin}
+  disabled={loading}
   className="
   w-full
   bg-cyan-400
@@ -299,10 +280,13 @@ animate-pulse
   hover:scale-[1.02]
   shadow-lg
   shadow-cyan-500/20
+  disabled:opacity-60
+  disabled:cursor-not-allowed
   "
 >
-  Login
+  {loading ? "Logging in..." : "Login"}
 </button>
+
           <p className="text-center text-slate-500 text-xs mt-6">
   Powered by PlacementDNA AI • Version 1.0
 </p>

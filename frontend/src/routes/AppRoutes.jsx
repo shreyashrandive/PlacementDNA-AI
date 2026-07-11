@@ -5,32 +5,46 @@ import Dashboard from "../pages/Dashboard";
 import DashboardAnalytics from "../pages/DashboardAnalytics";
 import Students from "../pages/Students";
 
+import ProtectedRoute from "../components/ProtectedRoute";
+
 function AppRoutes() {
   return (
     <BrowserRouter>
-      <Routes>
+     <Routes>
 
-        <Route
-          path="/"
-          element={<Login />}
-        />
+  <Route
+    path="/"
+    element={<Login />}
+  />
 
-        <Route
-          path="/dashboard"
-          element={<Dashboard />}
-        />
+  <Route
+    path="/dashboard"
+    element={
+      <ProtectedRoute>
+        <Dashboard />
+      </ProtectedRoute>
+    }
+  />
 
-        <Route
-           path="/analytics"
-           element={<DashboardAnalytics />}
-        />
+  <Route
+    path="/analytics"
+    element={
+      <ProtectedRoute>
+        <DashboardAnalytics />
+      </ProtectedRoute>
+    }
+  />
 
-        <Route
-          path="/students"
-          element={<Students />}
-        />
+  <Route
+    path="/students"
+    element={
+      <ProtectedRoute>
+        <Students />
+      </ProtectedRoute>
+    }
+  />
 
-      </Routes>
+</Routes>
     </BrowserRouter>
   );
 }
