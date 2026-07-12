@@ -1,25 +1,38 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+from typing import Optional
 
 
 # ==========================
 # Student Schemas
 # ==========================
 
-class Student(BaseModel):
-    name: str
+class StudentBase(BaseModel):
+    full_name: str
+    email: EmailStr
+    phone: str
+    branch: str
+    year: int
+    cgpa: float
     placement_score: int
     career_match: int
     skill_readiness: int
     hiring_probability: int
+    resume_url: Optional[str] = None
 
 
-class StudentCreate(BaseModel):
-    name: str
-    email: str
-    placement_score: int
-    career_match: int
-    skill_readiness: int
-    hiring_probability: int
+class StudentCreate(StudentBase):
+    pass
+
+
+class StudentUpdate(StudentBase):
+    pass
+
+
+class StudentResponse(StudentBase):
+    id: int
+
+    class Config:
+        from_attributes = True
 
 
 # ==========================
@@ -28,7 +41,7 @@ class StudentCreate(BaseModel):
 
 class UserBase(BaseModel):
     username: str
-    email: str
+    email: EmailStr
 
 
 class UserCreate(UserBase):
@@ -37,7 +50,7 @@ class UserCreate(UserBase):
 
 
 class UserLogin(BaseModel):
-    email: str
+    email: EmailStr
     password: str
 
 
@@ -46,5 +59,5 @@ class UserResponse(UserBase):
     role: str
     is_active: bool
 
-class Config:
+    class Config:
         from_attributes = True

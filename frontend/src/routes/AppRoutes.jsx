@@ -6,6 +6,7 @@ import DashboardAnalytics from "../pages/DashboardAnalytics";
 import Students from "../pages/Students";
 
 import ProtectedRoute from "../components/ProtectedRoute";
+import RoleProtectedRoute from "../components/RoleProtectedRoute";
 
 function AppRoutes() {
   return (
@@ -18,31 +19,41 @@ function AppRoutes() {
   />
 
   <Route
-    path="/dashboard"
-    element={
-      <ProtectedRoute>
-        <Dashboard />
-      </ProtectedRoute>
-    }
-  />
+  path="/dashboard"
+  element={
+    <RoleProtectedRoute
+      allowedRoles={[
+        "Admin",
+        "Placement Officer",
+        "Student"
+      ]}
+    >
+      <Dashboard />
+    </RoleProtectedRoute>
+  }
+/>
 
   <Route
-    path="/analytics"
-    element={
-      <ProtectedRoute>
-        <DashboardAnalytics />
-      </ProtectedRoute>
-    }
-  />
+  path="/analytics"
+  element={
+    <RoleProtectedRoute
+      allowedRoles={["Admin", "Placement Officer"]}
+    >
+      <DashboardAnalytics />
+    </RoleProtectedRoute>
+  }
+/>
 
   <Route
-    path="/students"
-    element={
-      <ProtectedRoute>
-        <Students />
-      </ProtectedRoute>
-    }
-  />
+  path="/students"
+  element={
+    <RoleProtectedRoute
+      allowedRoles={["Admin", "Placement Officer"]}
+    >
+      <Students />
+    </RoleProtectedRoute>
+  }
+/>
 
 </Routes>
     </BrowserRouter>

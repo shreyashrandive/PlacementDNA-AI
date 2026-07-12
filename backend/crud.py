@@ -1,216 +1,145 @@
-import psycopg2
+from sqlalchemy.orm import Session
+
+import models
+import schemas
 
 
-def get_student_data():
+# ==========================
+# Create Student
+# ==========================
 
-    conn = psycopg2.connect(
-        host="localhost",
-        database="placementdna",
-        user="postgres",
-        password="admin123"
+def create_student(db: Session, student: schemas.StudentCreate):
+
+    db_student = models.Student(
+        full_name=student.full_name,
+        email=student.email,
+        phone=student.phone,
+        branch=student.branch,
+        year=student.year,
+        cgpa=student.cgpa,
+        placement_score=student.placement_score,
+        career_match=student.career_match,
+        skill_readiness=student.skill_readiness,
+        hiring_probability=student.hiring_probability,
+        resume_url=student.resume_url
     )
 
-    cursor = conn.cursor()
+    db.add(db_student)
+    db.commit()
+    db.refresh(db_student)
 
-    cursor.execute("""
-        SELECT
-            name,
-            placement_score,
-            career_match,
-            skill_readiness,
-            hiring_probability
-        FROM students
-        LIMIT 1
-    """)
+    return db_student
 
-    student = cursor.fetchone()
 
-    conn.close()
+# ==========================
+# Get All Students
+# ==========================
 
-    return student
+def get_all_students(db: Session):
 
-def create_student(student):
-
-    conn = psycopg2.connect(
-        host="localhost",
-        database="placementdna",
-        user="postgres",
-        password="admin123"
+    return (
+        db.query(models.Student)
+        .order_by(models.Student.id)
+        .all()
     )
 
-    cursor = conn.cursor()
 
-    cursor.execute(
-        """
-        INSERT INTO students
-        (
-            name,
-            email,
-            placement_score,
-            career_match,
-            skill_readiness,
-            hiring_probability
-        )
-        VALUES (%s, %s, %s, %s, %s, %s)
-        """,
-        (
-            student.name,
-            student.email,
-            student.placement_score,
-            student.career_match,
-            student.skill_readiness,
-            student.hiring_probability
-        )
+# ==========================
+# Get Student By ID
+# ==========================
+
+def get_student(db: Session, student_id: int):
+
+    return (
+        db.query(models.Student)
+        .filter(models.Student.id == student_id)
+        .first()
     )
 
-    conn.commit()
 
-    conn.close()
+# ==========================
+# Update Student
+# ==========================
+
+def update_student(
+    db: Session,
+    student_id: int,
+    student: schemas.StudentUpdate
+):
+
+    db_student = get_student(db, student_id)
+
+    if not db_student:
+        return None
+
+    db_student.full_name = student.full_name
+    db_student.email = student.email
+    db_student.phone = student.phone
+    db_student.branch = student.branch
+    db_student.year = student.year
+    db_student.cgpa = student.cgpa
+    db_student.placement_score = student.placement_score
+    db_student.career_match = student.career_match
+    db_student.skill_readiness = student.skill_readiness
+    db_student.hiring_probability = student.hiring_probability
+    db_student.resume_url = student.resume_url
+
+    db.commit()
+    db.refresh(db_student)
+
+    return db_student
+
+
+# ==========================
+# Delete Student
+# ==========================
+
+def delete_student(db: Session, student_id: int):
+
+    db_student = get_student(db, student_id)
+
+    if not db_student:
+        return None
+
+    db.delete(db_student)
+    db.commit()
 
     return {
-        "message": "Student Created Successfully"
+        "message": "Student deleted successfully"
     }
 
-def get_all_students():
 
-    conn = psycopg2.connect(
-        host="localhost",
-        database="placementdna",
-        user="postgres",
-        password="admin123"
-    )
+# ==========================
+# Dashboard Statistics
+# ==========================
 
-    cursor = conn.cursor()
+def get_dashboard_stats(db: Session):
 
-    cursor.execute("""
-        SELECT
-            id,
-            name,
-            email,
-            placement_score,
-            career_match,
-            skill_readiness,
-            hiring_probability
-        FROM students
-        ORDER BY id
-    """)
+    students = db.query(models.Student).all()
 
-    students = cursor.fetchall()
+    total_students = len(students)
 
-    cursor.close()
-    conn.close()
+    if total_students == 0:
 
-    return students
+        return {
+            "total_students": 0,
+            "avg_score": 0,
+            "avg_hiring": 0,
+            "placement_ready": 0
+        }
 
-def delete_student(student_id):
+    avg_score = sum(
+        s.placement_score for s in students
+    ) / total_students
 
-    conn = psycopg2.connect(
-        host="localhost",
-        database="placementdna",
-        user="postgres",
-        password="admin123"
-    )
+    avg_hiring = sum(
+        s.hiring_probability for s in students
+    ) / total_students
 
-    cursor = conn.cursor()
-
-    cursor.execute(
-        "DELETE FROM students WHERE id = %s",
-        (student_id,)
-    )
-
-    conn.commit()
-
-    cursor.close()
-    conn.close()
-
-    return {
-        "message": "Student Deleted Successfully"
-    }   
-
-def update_student(student_id, student):
-
-    conn = psycopg2.connect(
-        host="localhost",
-        database="placementdna",
-        user="postgres",
-        password="admin123"
-    )
-
-    cursor = conn.cursor()
-
-    cursor.execute(
-        """
-        UPDATE students
-        SET
-            name=%s,
-            email=%s,
-            placement_score=%s,
-            career_match=%s,
-            skill_readiness=%s,
-            hiring_probability=%s
-        WHERE id=%s
-        """,
-        (
-            student.name,
-            student.email,
-            student.placement_score,
-            student.career_match,
-            student.skill_readiness,
-            student.hiring_probability,
-            student_id
-        )
-    )
-
-    conn.commit()
-
-    cursor.close()
-    conn.close()
-
-    return {
-        "message": "Student Updated Successfully"
-    }
-
-def get_dashboard_stats():
-
-    conn = psycopg2.connect(
-        host="localhost",
-        database="placementdna",
-        user="postgres",
-        password="admin123"
-    )
-
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        SELECT COUNT(*)
-        FROM students
-    """)
-
-    total_students = cursor.fetchone()[0]
-
-    cursor.execute("""
-        SELECT AVG(placement_score)
-        FROM students
-    """)
-
-    avg_score = cursor.fetchone()[0] or 0
-
-    cursor.execute("""
-        SELECT AVG(hiring_probability)
-        FROM students
-    """)
-
-    avg_hiring = cursor.fetchone()[0] or 0
-
-    cursor.execute("""
-        SELECT COUNT(*)
-        FROM students
-        WHERE placement_score >= 70
-    """)
-
-    placement_ready = cursor.fetchone()[0]
-
-    conn.close()
+    placement_ready = len([
+        s for s in students
+        if s.placement_score >= 70
+    ])
 
     return {
         "total_students": total_students,
@@ -218,236 +147,3 @@ def get_dashboard_stats():
         "avg_hiring": round(avg_hiring, 2),
         "placement_ready": placement_ready
     }
-
-def get_chart_data():
-
-    conn = psycopg2.connect(
-        host="localhost",
-        database="placementdna",
-        user="postgres",
-        password="admin123"
-    )
-
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        SELECT
-            name,
-            placement_score
-        FROM students
-        ORDER BY placement_score DESC
-    """)
-
-    students = cursor.fetchall()
-
-    conn.close()
-
-    result = []
-
-    for student in students:
-        result.append(
-            {
-                "name": student[0],
-                "placement_score": student[1]
-            }
-        )
-
-    return result
-
-def get_director_insights():
-
-    conn = psycopg2.connect(
-        host="localhost",
-        database="placementdna",
-        user="postgres",
-        password="admin123"
-    )
-
-    cursor = conn.cursor()
-
-    # Total Students
-    cursor.execute("SELECT COUNT(*) FROM students")
-    total_students = cursor.fetchone()[0]
-
-    # Placement Ready Students
-    cursor.execute("""
-        SELECT COUNT(*)
-        FROM students
-        WHERE placement_score >= 70
-    """)
-    placement_ready = cursor.fetchone()[0]
-
-    # Students Needing Attention
-    cursor.execute("""
-        SELECT COUNT(*)
-        FROM students
-        WHERE placement_score < 70
-    """)
-    needs_attention = cursor.fetchone()[0]
-
-    # Average Placement Score
-    cursor.execute("""
-        SELECT AVG(placement_score)
-        FROM students
-    """)
-    avg_score = cursor.fetchone()[0] or 0
-
-    # Top Performer
-    cursor.execute("""
-        SELECT
-            name,
-            placement_score
-        FROM students
-        ORDER BY placement_score DESC
-        LIMIT 1
-    """)
-
-    top_student = cursor.fetchone()
-
-    conn.close()
-
-    return {
-        "total_students": total_students,
-        "placement_ready": placement_ready,
-        "needs_attention": needs_attention,
-        "avg_score": round(avg_score, 2),
-        "top_student": top_student[0] if top_student else "N/A",
-        "top_score": top_student[1] if top_student else 0
-    }
-
-def get_ai_recommendations():
-
-    insights = get_director_insights()
-
-    if insights["avg_score"] >= 80:
-        readiness = "Excellent"
-    elif insights["avg_score"] >= 60:
-        readiness = "Good"
-    else:
-        readiness = "Needs Improvement"
-
-    return {
-        "overall_status": readiness,
-        "total_students": insights["total_students"],
-        "placement_ready": insights["placement_ready"],
-        "needs_attention": insights["needs_attention"],
-        "top_student": insights["top_student"],
-        "top_score": insights["top_score"],
-        "avg_score": insights["avg_score"]
-    }
-
-def get_placement_trend():
-
-    return [
-
-        {"month": "Jan", "score": 62},
-
-        {"month": "Feb", "score": 66},
-
-        {"month": "Mar", "score": 71},
-
-        {"month": "Apr", "score": 75},
-
-        {"month": "May", "score": 81},
-
-        {"month": "Jun", "score": 87}
-
-    ]
-
-def get_department_analytics():
-
-    return [
-
-        {
-            "department": "BCA",
-            "placement_rate": 92
-        },
-
-        {
-            "department": "BBA",
-            "placement_rate": 78
-        },
-
-        {
-            "department": "MCA",
-            "placement_rate": 96
-        },
-
-        {
-            "department": "MBA",
-            "placement_rate": 74
-        },
-
-        {
-            "department": "B.Tech",
-            "placement_rate": 88
-        }
-
-    ]
-
-def get_top_students():
-
-    return [
-
-        {
-            "rank": 1,
-            "name": "Shreyash",
-            "department": "BCA",
-            "placement_score": 95,
-            "hiring_probability": 98,
-            "status": "Ready"
-        },
-
-        {
-            "rank": 2,
-            "name": "Rahul",
-            "department": "MCA",
-            "placement_score": 93,
-            "hiring_probability": 96,
-            "status": "Ready"
-        },
-
-        {
-            "rank": 3,
-            "name": "Priya",
-            "department": "B.Tech",
-            "placement_score": 91,
-            "hiring_probability": 94,
-            "status": "Ready"
-        },
-
-        {
-            "rank": 4,
-            "name": "Amit",
-            "department": "MBA",
-            "placement_score": 88,
-            "hiring_probability": 90,
-            "status": "Improving"
-        },
-
-        {
-            "rank": 5,
-            "name": "Neha",
-            "department": "BBA",
-            "placement_score": 86,
-            "hiring_probability": 89,
-            "status": "Improving"
-        }
-
-    ]
-
-def get_hiring_pie_data():
-
-    insights = get_director_insights()
-
-    return [
-        {
-            "name": "Placement Ready",
-            "value": insights["placement_ready"]
-        },
-        {
-            "name": "Needs Attention",
-            "value": insights["needs_attention"]
-        }
-    ]
-
