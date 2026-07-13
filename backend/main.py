@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from routers.student import router as student_router
 from routers.auth import router as auth_router
+from routers.company import router as company_router
 
 import models
 from database import Base, engine
@@ -21,6 +22,7 @@ app.add_middleware(
 
 app.include_router(student_router)
 app.include_router(auth_router)
+app.include_router(company_router)
 
 
 @app.get("/")

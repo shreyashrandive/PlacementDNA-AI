@@ -4,6 +4,7 @@ import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import DashboardAnalytics from "../pages/DashboardAnalytics";
 import Students from "../pages/Students";
+import Company from "../pages/Company";
 
 import ProtectedRoute from "../components/ProtectedRoute";
 import RoleProtectedRoute from "../components/RoleProtectedRoute";
@@ -53,6 +54,11 @@ function AppRoutes() {
       <Students />
     </RoleProtectedRoute>
   }
+/>
+
+<Route
+  path="/company"
+  element={<Company />}
 />
 
 </Routes>

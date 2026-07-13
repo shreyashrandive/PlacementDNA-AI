@@ -56,3 +56,25 @@ class Student(Base):
     resume_url = Column(String, nullable=True)
 
     created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class Company(Base):
+    __tablename__ = "companies"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    company_name = Column(String, nullable=False)
+
+    company_type = Column(String, nullable=False)
+
+    package = Column(Float, nullable=False)
+
+    location = Column(String, nullable=False)
+
+    eligibility = Column(Float, nullable=False)
+
+    job_role = Column(String, nullable=False)
+
+    status = Column(String, default="Active")
+
+    created_at = Column(DateTime, default=datetime.utcnow)

@@ -61,3 +61,32 @@ class UserResponse(UserBase):
 
     class Config:
         from_attributes = True
+
+
+# ==========================
+# Company Schemas
+# ==========================
+
+class CompanyBase(BaseModel):
+    company_name: str
+    company_type: str
+    package: float
+    location: str
+    eligibility: float
+    job_role: str
+    status: str = "Active"
+
+
+class CompanyCreate(CompanyBase):
+    pass
+
+
+class CompanyUpdate(CompanyBase):
+    pass
+
+
+class CompanyResponse(CompanyBase):
+    id: int
+
+    class Config:
+        from_attributes = True

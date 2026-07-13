@@ -147,3 +147,83 @@ def get_dashboard_stats(db: Session):
         "avg_hiring": round(avg_hiring, 2),
         "placement_ready": placement_ready
     }
+
+
+
+# =====================================================
+# COMPANY CRUD
+# =====================================================
+
+def create_company(db: Session, company: schemas.CompanyCreate):
+
+    db_company = models.Company(**company.model_dump())
+
+    db.add(db_company)
+
+    db.commit()
+
+    db.refresh(db_company)
+
+    return db_company
+
+
+def get_companies(db: Session):
+
+    return db.query(models.Company).all()
+
+
+def get_company(db: Session, company_id: int):
+
+    return (
+        db.query(models.Company)
+        .filter(models.Company.id == company_id)
+        .first()
+    )
+
+def update_company(
+    db: Session,
+    company_id: int,
+    company: schemas.CompanyUpdate
+):
+
+    db_company = (
+        db.query(models.Company)
+        .filter(models.Company.id == company_id)
+        .first()
+    )
+
+    if not db_company:
+        return None
+
+    for key, value in company.model_dump().items():
+        setattr(db_company, key, value)
+
+    db.commit()
+
+    db.refresh(db_company)
+
+    return db_company
+
+def delete_company(
+    db: Session,
+    company_id: int
+):
+
+    db_company = (
+        db.query(models.Company)
+        .filter(models.Company.id == company_id)
+        .first()
+    )
+
+    if not db_company:
+        return {
+            "message": "Company not found"
+        }
+
+    db.delete(db_company)
+
+    db.commit()
+
+    return {
+        "message": "Company deleted successfully"
+    }

@@ -1,16 +1,23 @@
 import { useEffect, useState } from "react";
+import { test } from "../services/studentService";
 
 function Students() {
+test();
 
   const [students, setStudents] = useState([]);
   const [editStudentId, setEditStudentId] = useState(null);
   const [formData, setFormData] = useState({
-  name: "",
+  full_name: "",
   email: "",
+  phone: "",
+  branch: "",
+  year: "",
+  cgpa: "",
   placement_score: "",
   career_match: "",
   skill_readiness: "",
-  hiring_probability: ""
+  hiring_probability: "",
+  resume_url: ""
 });
 
 const handleSaveStudent = async () => {
@@ -61,29 +68,44 @@ const handleDeleteStudent = async (id) => {
 
 const handleEditStudent = (student) => {
 
-  alert(student.name);
-
   setEditStudentId(student.id);
 
   setFormData({
-    name: student.name,
+    full_name: student.full_name,
     email: student.email,
+    phone: student.phone,
+    branch: student.branch,
+    year: student.year,
+    cgpa: student.cgpa,
     placement_score: student.placement_score,
     career_match: student.career_match,
     skill_readiness: student.skill_readiness,
-    hiring_probability: student.hiring_probability
+    hiring_probability: student.hiring_probability,
+    resume_url: student.resume_url || ""
   });
 
 };
 useEffect(() => {
 
-    fetch("http://127.0.0.1:8000/students")
-      .then((response) => response.json())
-      .then((data) => {
-        setStudents(data);
-      });
+  const fetchStudents = async () => {
 
-  }, []);
+    try {
+
+      const data = await getStudents();
+
+      setStudents(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  };
+
+  fetchStudents();
+
+}, []);
 
   return (
     <div className="min-h-screen bg-slate-950 p-8">
@@ -101,12 +123,12 @@ useEffect(() => {
 
     <input
   type="text"
-  placeholder="Student Name"
-  value={formData.name}
+  placeholder="Full Name"
+  value={formData.full_name}
   onChange={(e) =>
     setFormData({
       ...formData,
-      name: e.target.value
+      full_name: e.target.value
     })
   }
   className="p-3 rounded-lg bg-slate-800 text-white"
@@ -120,6 +142,59 @@ useEffect(() => {
     setFormData({
       ...formData,
       email: e.target.value
+    })
+  }
+  className="p-3 rounded-lg bg-slate-800 text-white"
+/>
+
+<input
+  type="text"
+  placeholder="Phone Number"
+  value={formData.phone}
+  onChange={(e) =>
+    setFormData({
+      ...formData,
+      phone: e.target.value
+    })
+  }
+  className="p-3 rounded-lg bg-slate-800 text-white"
+/>
+
+<input
+  type="text"
+  placeholder="Branch (MCA, BCA, B.Tech...)"
+  value={formData.branch}
+  onChange={(e) =>
+    setFormData({
+      ...formData,
+      branch: e.target.value
+    })
+  }
+  className="p-3 rounded-lg bg-slate-800 text-white"
+/>
+
+<input
+  type="number"
+  placeholder="Year"
+  value={formData.year}
+  onChange={(e) =>
+    setFormData({
+      ...formData,
+      year: e.target.value
+    })
+  }
+  className="p-3 rounded-lg bg-slate-800 text-white"
+/>
+
+<input
+  type="number"
+  step="0.01"
+  placeholder="CGPA"
+  value={formData.cgpa}
+  onChange={(e) =>
+    setFormData({
+      ...formData,
+      cgpa: e.target.value
     })
   }
   className="p-3 rounded-lg bg-slate-800 text-white"
@@ -177,6 +252,19 @@ useEffect(() => {
   className="p-3 rounded-lg bg-slate-800 text-white"
 />
 
+<input
+  type="text"
+  placeholder="Resume URL"
+  value={formData.resume_url}
+  onChange={(e) =>
+    setFormData({
+      ...formData,
+      resume_url: e.target.value
+    })
+  }
+  className="p-3 rounded-lg bg-slate-800 text-white"
+/>
+
   </div>
 
   <button
@@ -204,12 +292,12 @@ useEffect(() => {
 
             <tr className="bg-cyan-500 text-slate-950">
 
-              <th className="p-4 text-left">ID</th>
-              <th className="p-4 text-left">Name</th>
+              <th className="p-4 text-left">Full Name</th>
               <th className="p-4 text-left">Email</th>
+              <th className="p-4 text-left">Branch</th>
+              <th className="p-4 text-left">CGPA</th>
               <th className="p-4 text-left">Score</th>
               <th className="p-4 text-left">Hiring %</th>
-              <th className="p-4 text-left">Action</th>
 
             </tr>
 
@@ -223,11 +311,12 @@ useEffect(() => {
                 key={student.id}
                 className="border-b border-slate-800 text-white"
               >
-                <td className="p-4">{student.id}</td>
-                <td className="p-4">{student.name}</td>
-                <td className="p-4">{student.email}</td>
-                <td className="p-4">{student.placement_score}</td>
-                <td className="p-4">{student.hiring_probability}%</td>
+                <td className="p-4">{student.full_name}</td>
+<td className="p-4">{student.email}</td>
+<td className="p-4">{student.branch}</td>
+<td className="p-4">{student.cgpa}</td>
+<td className="p-4">{student.placement_score}</td>
+<td className="p-4">{student.hiring_probability}%</td>
 <td className="p-4 flex gap-2">
 
  <button
