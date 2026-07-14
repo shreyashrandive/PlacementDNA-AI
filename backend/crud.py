@@ -227,3 +227,99 @@ def delete_company(
     return {
         "message": "Company deleted successfully"
     }
+
+
+# =====================================================
+# PLACEMENT DRIVE CRUD
+# =====================================================
+
+def create_placement_drive(
+    db: Session,
+    placement_drive: schemas.PlacementDriveCreate
+):
+
+    db_drive = models.PlacementDrive(
+        **placement_drive.model_dump()
+    )
+
+    db.add(db_drive)
+
+    db.commit()
+
+    db.refresh(db_drive)
+
+    return db_drive
+
+
+def get_placement_drives(
+    db: Session
+):
+
+    return (
+        db.query(models.PlacementDrive)
+        .all()
+    )
+
+
+def get_placement_drive(
+    db: Session,
+    drive_id: int
+):
+
+    return (
+        db.query(models.PlacementDrive)
+        .filter(
+            models.PlacementDrive.id == drive_id
+        )
+        .first()
+    )
+
+
+def update_placement_drive(
+    db: Session,
+    drive_id: int,
+    placement_drive: schemas.PlacementDriveUpdate
+):
+
+    db_drive = (
+        db.query(models.PlacementDrive)
+        .filter(models.PlacementDrive.id == drive_id)
+        .first()
+    )
+
+    if not db_drive:
+        return None
+
+    for key, value in placement_drive.model_dump().items():
+        setattr(db_drive, key, value)
+
+    db.commit()
+
+    db.refresh(db_drive)
+
+    return db_drive
+
+
+def delete_placement_drive(
+    db: Session,
+    drive_id: int
+):
+
+    db_drive = (
+        db.query(models.PlacementDrive)
+        .filter(models.PlacementDrive.id == drive_id)
+        .first()
+    )
+
+    if not db_drive:
+        return {
+            "message": "Placement Drive not found"
+        }
+
+    db.delete(db_drive)
+
+    db.commit()
+
+    return {
+        "message": "Placement Drive deleted successfully"
+    }

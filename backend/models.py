@@ -78,3 +78,29 @@ class Company(Base):
     status = Column(String, default="Active")
 
     created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class PlacementDrive(Base):
+    __tablename__ = "placement_drives"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    company_name = Column(String, nullable=False)
+
+    job_role = Column(String, nullable=False)
+
+    package = Column(Float, nullable=False)
+
+    location = Column(String, nullable=False)
+
+    eligible_branch = Column(String, nullable=False)
+
+    minimum_cgpa = Column(Float, nullable=False)
+
+    drive_date = Column(String, nullable=False)
+
+    last_date_to_apply = Column(String, nullable=False)
+
+    status = Column(String, default="Upcoming")
+
+    created_at = Column(DateTime, default=datetime.utcnow)

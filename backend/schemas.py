@@ -90,3 +90,35 @@ class CompanyResponse(CompanyBase):
 
     class Config:
         from_attributes = True
+
+
+
+# ==========================
+# Placement Drive Schemas
+# ==========================
+
+class PlacementDriveBase(BaseModel):
+    company_name: str
+    job_role: str
+    package: float
+    location: str
+    eligible_branch: str
+    minimum_cgpa: float
+    drive_date: str
+    last_date_to_apply: str
+    status: str = "Upcoming"
+
+
+class PlacementDriveCreate(PlacementDriveBase):
+    pass
+
+
+class PlacementDriveUpdate(PlacementDriveBase):
+    pass
+
+
+class PlacementDriveResponse(PlacementDriveBase):
+    id: int
+
+    class Config:
+        from_attributes = True
