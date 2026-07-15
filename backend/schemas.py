@@ -122,3 +122,29 @@ class PlacementDriveResponse(PlacementDriveBase):
 
     class Config:
         from_attributes = True
+
+
+# ==========================
+# Resume Schemas
+# ==========================
+
+class ResumeBase(BaseModel):
+    student_name: str
+    email: str
+    resume_filename: str
+    resume_path: str
+
+
+class ResumeCreate(ResumeBase):
+    pass
+
+
+class ResumeUpdate(ResumeBase):
+    pass
+
+
+class ResumeResponse(ResumeBase):
+    id: int
+
+    class Config:
+        from_attributes = True

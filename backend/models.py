@@ -104,3 +104,19 @@ class PlacementDrive(Base):
     status = Column(String, default="Upcoming")
 
     created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class Resume(Base):
+    __tablename__ = "resumes"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    student_name = Column(String, nullable=False)
+
+    email = Column(String, nullable=False)
+
+    resume_filename = Column(String, nullable=False)
+
+    resume_path = Column(String, nullable=False)
+
+    uploaded_at = Column(DateTime, default=datetime.utcnow)

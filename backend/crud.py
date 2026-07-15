@@ -323,3 +323,97 @@ def delete_placement_drive(
     return {
         "message": "Placement Drive deleted successfully"
     }
+
+# =====================================================
+# RESUME CRUD
+# =====================================================
+
+def create_resume(
+    db: Session,
+    resume: schemas.ResumeCreate
+):
+
+    db_resume = models.Resume(
+        **resume.model_dump()
+    )
+
+    db.add(db_resume)
+
+    db.commit()
+
+    db.refresh(db_resume)
+
+    return db_resume
+
+
+def get_resumes(
+    db: Session
+):
+
+    return (
+        db.query(models.Resume)
+        .all()
+    )
+
+
+def get_resume(
+    db: Session,
+    resume_id: int
+):
+
+    return (
+        db.query(models.Resume)
+        .filter(
+            models.Resume.id == resume_id
+        )
+        .first()
+    )
+
+def update_resume(
+    db: Session,
+    resume_id: int,
+    resume: schemas.ResumeUpdate
+):
+
+    db_resume = (
+        db.query(models.Resume)
+        .filter(models.Resume.id == resume_id)
+        .first()
+    )
+
+    if not db_resume:
+        return None
+
+    for key, value in resume.model_dump().items():
+        setattr(db_resume, key, value)
+
+    db.commit()
+
+    db.refresh(db_resume)
+
+    return db_resume    
+
+
+def delete_resume(
+    db: Session,
+    resume_id: int
+):
+
+    db_resume = (
+        db.query(models.Resume)
+        .filter(models.Resume.id == resume_id)
+        .first()
+    )
+
+    if not db_resume:
+        return {
+            "message": "Resume not found"
+        }
+
+    db.delete(db_resume)
+
+    db.commit()
+
+    return {
+        "message": "Resume deleted successfully"
+    }
