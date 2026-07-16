@@ -6,6 +6,7 @@ import DashboardAnalytics from "../pages/DashboardAnalytics";
 import Students from "../pages/Students";
 import Company from "../pages/Company";
 import PlacementDrive from "../pages/PlacementDrive";
+import Resume from "../pages/Resume";
 
 import ProtectedRoute from "../components/ProtectedRoute";
 import RoleProtectedRoute from "../components/RoleProtectedRoute";
@@ -65,6 +66,11 @@ function AppRoutes() {
 <Route
   path="/placement-drive"
   element={<PlacementDrive />}
+/>
+
+<Route
+  path="/resume"
+  element={<Resume />}
 />
 
 </Routes>

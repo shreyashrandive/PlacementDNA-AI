@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 import os
 import shutil
+import models
 
 import crud
 import schemas
@@ -86,8 +87,10 @@ def delete_resume(
 def upload_resume(
     student_name: str = Form(...),
     email: str = Form(...),
-    file: UploadFile = File(...)
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db)
 ):
+
     upload_folder = "uploads"
 
     file_path = os.path.join(
@@ -101,7 +104,20 @@ def upload_resume(
             buffer
         )
 
+    db_resume = models.Resume(
+        student_name=student_name,
+        email=email,
+        resume_filename=file.filename,
+        resume_path=file_path
+    )
+
+    db.add(db_resume)
+
+    db.commit()
+
+    db.refresh(db_resume)
+
     return {
-        "filename": file.filename,
-        "path": file_path
+        "message": "Resume uploaded successfully",
+        "resume": db_resume
     }
