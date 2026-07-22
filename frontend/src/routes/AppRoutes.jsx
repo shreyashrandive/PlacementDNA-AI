@@ -7,6 +7,7 @@ import Students from "../pages/Students";
 import Company from "../pages/Company";
 import PlacementDrive from "../pages/PlacementDrive";
 import Resume from "../pages/Resume";
+import AIResumeAnalysis from "../pages/AIResumeAnalysis";
 
 import ProtectedRoute from "../components/ProtectedRoute";
 import RoleProtectedRoute from "../components/RoleProtectedRoute";
@@ -71,6 +72,11 @@ function AppRoutes() {
 <Route
   path="/resume"
   element={<Resume />}
+/>
+
+<Route
+    path="/ai-analysis"
+    element={<AIResumeAnalysis />}
 />
 
 </Routes>
